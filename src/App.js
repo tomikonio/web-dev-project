@@ -10,7 +10,7 @@ import Signin from "./components/Signin/Signin";
 import Particles from "react-particles-js";
 
 const predictApp = new Clarifai.App({
-  apiKey: "dc65f43c923a4e20b931fc8b2e76a5ba"
+  apiKey: ""
 });
 
 const particlesOptions = {
