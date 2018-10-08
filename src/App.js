@@ -11,7 +11,7 @@ import Register from "./components/Register/Register";
 import Particles from "react-particles-js";
 
 const predictApp = new Clarifai.App({
-  apiKey: "3b98093507e349a0b09ab38473aacced"
+  apiKey: ""
 });
 
 const particlesOptions = {
