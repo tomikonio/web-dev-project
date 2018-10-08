@@ -11,7 +11,7 @@ import Register from "./components/Register/Register";
 import Particles from "react-particles-js";
 
 const predictApp = new Clarifai.App({
-  apiKey: ""
+  apiKey: "3b98093507e349a0b09ab38473aacced"
 });
 
 const particlesOptions = {
@@ -34,7 +34,14 @@ class App extends Component {
       imageUrl: "",
       box: {},
       route: "signin",
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: "",
+        name: "",
+        email: "",
+        entries: 0,
+        joined: ""
+      }
     };
   }
 
@@ -43,6 +50,18 @@ class App extends Component {
   //     .then(response => response.json())
   //     .then(console.log);
   // }
+
+  loadUser = data => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined
+      }
+    });
+  };
 
   calculateFaceLocation = data => {
     const clarifaiFace =
@@ -108,7 +127,10 @@ class App extends Component {
         ) : route === "signin" ? (
           <Signin onRouteChange={this.onRouteChange} />
         ) : (
-          <Register onRouteChange={this.onRouteChange} />
+          <Register
+            loadUser={this.loadUser}
+            onRouteChange={this.onRouteChange}
+          />
         )}
       </div>
     );
