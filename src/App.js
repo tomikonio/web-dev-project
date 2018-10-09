@@ -11,7 +11,7 @@ import Register from "./components/Register/Register";
 import Particles from "react-particles-js";
 
 const predictApp = new Clarifai.App({
-  apiKey: ""
+  apiKey: "969e20c961bd4490b551742a1386f0f7"
 });
 
 const particlesOptions = {
@@ -90,9 +90,22 @@ class App extends Component {
     this.setState({ imageUrl: this.state.input });
     predictApp.models
       .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-      .then(response =>
-        this.displayFcaeBox(this.calculateFaceLocation(response))
-      )
+      .then(response => {
+        if (response) {
+          fetch("http://localhost:3000/image", {
+            method: "put",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          })
+            .then(response => response.json())
+            .then(count => {
+              this.setState(Object.assign(this.state.user, { entries: count }));
+            });
+        }
+        this.displayFcaeBox(this.calculateFaceLocation(response));
+      })
       .catch(err => console.log);
   };
 
@@ -117,7 +130,10 @@ class App extends Component {
         {route === "home" ? (
           <div>
             <Logo />
-            <Rank />
+            <Rank
+              name={this.state.user.name}
+              entries={this.state.user.entries}
+            />
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
@@ -125,7 +141,7 @@ class App extends Component {
             <FaceRecognition box={box} imageUrl={imageUrl} />
           </div>
         ) : route === "signin" ? (
-          <Signin onRouteChange={this.onRouteChange} />
+          <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         ) : (
           <Register
             loadUser={this.loadUser}
